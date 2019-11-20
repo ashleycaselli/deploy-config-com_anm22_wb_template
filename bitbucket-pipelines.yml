@@ -1,0 +1,44 @@
+commonStep: &commonStep
+  step:
+    name: Build and test
+    image: node:10.15.0
+    caches:
+      - node
+    script:
+      - mkdir deploy
+      - npm install
+      - npm run build
+    artifacts: # defining the artifacts to be passed to each future step.
+      - deploy/**
+pipelines:
+  default:
+    - <<: *commonStep
+    - step:
+        name: Deployment to test
+        deployment: test
+        script:
+          - ./deploy.sh
+          - pipe: atlassian/ftp-deploy:0.2.2
+            variables:
+              USER: $FTP_USER
+              PASSWORD: $FTP_PASS
+              SERVER: $FTP_HOST
+              REMOTE_PATH: $TEMPLATE_PATH/$BITBUCKET_REPO_SLUG
+              LOCAL_PATH: 'deploy'
+              # DEBUG: '<boolean>' # Optional
+  tags:
+    '*':
+      - <<: *commonStep
+      - step:
+          name: Deployment to production
+          deployment: production
+          script:
+            - ./deploy.sh
+            - pipe: atlassian/ftp-deploy:0.2.2
+              variables:
+                USER: $FTP_USER
+                PASSWORD: $FTP_PASS
+                SERVER: $FTP_HOST
+                REMOTE_PATH: $TEMPLATE_PATH/$BITBUCKET_REPO_SLUG
+                LOCAL_PATH: 'deploy'
+                # DEBUG: '<boolean>' # Optional 
