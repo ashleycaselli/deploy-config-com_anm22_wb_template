@@ -18,7 +18,7 @@ pipelines:
         deployment: test
         script:
           - ./deploy.sh
-          - pipe: atlassian/ftp-deploy:0.2.3
+          - pipe: atlassian/ftp-deploy:0.3.7
             variables:
               USER: $FTP_USER
               PASSWORD: $FTP_PASS
@@ -34,7 +34,7 @@ pipelines:
           deployment: production
           script:
             - ./deploy.sh
-            - pipe: atlassian/ftp-deploy:0.2.3
+            - pipe: atlassian/ftp-deploy:0.3.7
               variables:
                 USER: $FTP_USER
                 PASSWORD: $FTP_PASS
