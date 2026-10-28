@@ -1,7 +1,7 @@
 commonStep: &commonStep
   step:
     name: Build and test
-    image: node:24.22.1
+    image: node:26.12.1
     caches:
       - node
     script:
